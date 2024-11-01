@@ -43,6 +43,8 @@ class SocketError extends Error {
   }
 }
 
+
+
 export default {
   ValidationError,
   AuthorizationError,
