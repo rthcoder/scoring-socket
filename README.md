@@ -51,7 +51,7 @@ Scoring socket
 ## Base URL HTTP
 `http://localhost:8000`
 
-## Panel
+## Scoring natijasini yuborish
 - **Endpoint**: `/api/socket`
 - **Method**: POST
 - **Response**:
