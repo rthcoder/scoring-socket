@@ -72,7 +72,7 @@ Scoring socket
 ## Base URL Socket.io
 `http://localhost:8000?token=<accessToken>`
 
-## Panel
+## scoring_done
 - **Events**: `scoring_done` scoringdan qatygan natijani olish uchun. `error` Socketga ulangan vaqtda qandaydir xatolik uchun. Masalan invalid token bo'lganda AuthorizationError error yani 401 uchun
 - **Response**:
 ```
