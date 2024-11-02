@@ -1,5 +1,6 @@
 import { Server } from "socket.io";
 import error from "#error";
+import model from '../model/model/client.js'
 
 let ws = {
   clients: {}
@@ -15,10 +16,24 @@ const connection = (server) => {
 
     ws.io = io;
 
-    io.on("connection", (socket) => {
+    io.on("connection", async (socket) => {
       console.log("Socket connection, Socket ID:", socket.id);
 
-      const clientId = socket.handshake.query.client_id;
+      const token = socket.handshake.query.token;
+
+      const client = await model.getClient({ token })
+
+      console.log(client);
+
+
+      if (!client) {
+        return new error.AuthorizationError(401, 'Unauthorized')
+      }
+
+      const clientId = client.id
+
+      console.log(clientId);
+
 
       if (clientId) {
         ws.clients[clientId] = socket;

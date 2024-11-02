@@ -20,12 +20,12 @@ app.get("/", (req, res, next) => {
   res.json("Hello");
 });
 
-// import database from "#database"
+import { db } from "#database"
 import socketRouter from "#router/socket";
 
 !async function () {
   try {
-    database()
+    // db()
     app.use(socketRouter);
   } catch (error) {
     console.log(error);

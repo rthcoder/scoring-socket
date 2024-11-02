@@ -1,28 +1,32 @@
-import pg from 'pg'
+import mysql from 'mysql2/promise';
 
-const pool = new pg.Pool({
-  user: process.env.DB_USER,
-  port: process.env.DB_PORT,
-  password: process.env.DB_PASSWORD,
+// Ulanish hovuzini sozlash
+const pool = mysql.createPool({
   host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  // connectionString: process.env.PG_CONNECTION_STRING
-})
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+  connectTimeout: 10000, // Ulanish uchun kutish vaqti (ms)
+  acquireTimeout: 10000, // Hovuzdan ulanish olish uchun kutish vaqti (ms)
+});
 
-async function db(query, ...params) {
-  const client = await pool.connect()
-  console.log('Database connected succesfully...');
-
-
+async function db(query, params = []) {
+  let connection;
   try {
-    const { rows } = await client.query(query, params.length ? params : null)
-    return rows
+    connection = await pool.getConnection();
+    console.log('Database connected successfully...');
+
+    const [rows] = await connection.execute(query, params);
+    return rows;
   } catch (error) {
-    console.log("DATABASE ERROR: ", error.message)
-    throw new Error(error.message)
+    console.error('Error executing query:', error.message);
+    throw new Error(`Database error: ${error.message}`);
   } finally {
-    client.release()
+    if (connection) connection.release();
   }
 }
 
-export default db
+export { db };
