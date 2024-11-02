@@ -1,8 +1,21 @@
-import socket from "#socket";
 import error from "#error";
+import socket from "#socket";
+import model from '../model/model/client.js';
 
 const SEND = async (req, res, next) => {
   try {
+
+    const accessToken = req.headers.authorization?.replace(
+      /^(bearer)\s/i,
+      '',
+    );
+
+    const client = await model.getClient({ token: accessToken })
+
+    if (!client) {
+      throw new error.AuthorizationError(401, 'Unauthorized');
+    }
+
     const data = req?.body;
 
     if (data?.method !== "scoring_done") {
@@ -22,6 +35,7 @@ const SEND = async (req, res, next) => {
       message: "success",
       data: data
     });
+
   } catch (error) {
     console.log(error);
     return next(error);

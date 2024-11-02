@@ -25,7 +25,6 @@ import socketRouter from "#router/socket";
 
 !async function () {
   try {
-    // db()
     app.use(socketRouter);
   } catch (error) {
     console.log(error);

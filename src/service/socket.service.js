@@ -23,17 +23,11 @@ const connection = (server) => {
 
       const client = await model.getClient({ token })
 
-      console.log(client);
-
-
       if (!client) {
-        return new error.AuthorizationError(401, 'Unauthorized')
+        return socket.emit('error', new error.AuthorizationError(401, 'Unauthorized'));
       }
 
       const clientId = client.id
-
-      console.log(clientId);
-
 
       if (clientId) {
         ws.clients[clientId] = socket;
